@@ -11,6 +11,19 @@
 ## 실행 방법
 
 1. 가상 환경을 생성하고 활성화합니다(선택 사항).
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+   Windows 사용자는 PowerShell에서 다음 명령을 사용합니다.
+
+   ```powershell
+   python -m venv venv
+   venv\Scripts\Activate.ps1
+   ```
+
 2. 필요한 패키지를 설치합니다.
 
    ```bash
