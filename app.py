@@ -1,13 +1,11 @@
-"""Flask application that provides an overview of Presbyterian Church of Korea (Tonghap) systematic theology."""
+"""Lightweight HTTP server to present Tonghap Presbyterian systematic theology content."""
 from __future__ import annotations
 
 from dataclasses import dataclass
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+from pathlib import Path
 from typing import Dict, List
-
-from flask import Flask, jsonify, render_template
-
-
-app = Flask(__name__)
 
 
 @dataclass
@@ -17,6 +15,31 @@ class TheologySection:
     title: str
     summary: str
     bullet_points: List[str]
+
+
+def build_sections_html(sections: Dict[str, TheologySection]) -> str:
+    """Convert theology sections into HTML card fragments."""
+
+    cards: List[str] = []
+    for key, section in sections.items():
+        bullets = "".join(f"<li>{bullet}</li>" for bullet in section.bullet_points)
+        cards.append(
+            (
+                f'<article class="card" id="{key}">'
+                f"<h2>{section.title}</h2>"
+                f"<p class=\"summary\">{section.summary}</p>"
+                f"<ul>{bullets}</ul>"
+                "</article>"
+            )
+        )
+    return "\n".join(cards)
+
+
+def render_index(sections: Dict[str, TheologySection]) -> str:
+    """Render the main HTML page by injecting section cards."""
+
+    template = Path("templates/index.html").read_text(encoding="utf-8")
+    return template.replace("%%SECTIONS%%", build_sections_html(sections))
 
 
 THEOLOGY_CONTENT: Dict[str, TheologySection] = {
@@ -86,19 +109,46 @@ THEOLOGY_CONTENT: Dict[str, TheologySection] = {
 }
 
 
-@app.get("/")
-def index() -> str:
-    """Render the main page with theology content."""
+class TheologyHandler(BaseHTTPRequestHandler):
+    """Serve theology content as HTML and JSON."""
 
-    return render_template("index.html", sections=THEOLOGY_CONTENT)
+    def do_GET(self) -> None:  # noqa: N802 - required signature
+        if self.path == "/" or self.path.startswith("/?"):
+            self._respond_html(render_index(THEOLOGY_CONTENT))
+        elif self.path.startswith("/api/sections"):
+            self._respond_json({key: section.__dict__ for key, section in THEOLOGY_CONTENT.items()})
+        else:
+            self.send_error(404, "Not Found")
+
+    def log_message(self, format: str, *args) -> None:  # noqa: A003 - align with BaseHTTPRequestHandler
+        """Silence default stdout logging to keep output clean."""
+
+        return
+
+    def _respond_html(self, body: str) -> None:
+        payload = body.encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def _respond_json(self, data: Dict[str, object]) -> None:
+        body = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
 
-@app.get("/api/sections")
-def sections() -> str:
-    """Provide theology content as JSON."""
+def run_server(host: str = "0.0.0.0", port: int = 5000) -> None:
+    """Run the HTTP server."""
 
-    return jsonify({key: section.__dict__ for key, section in THEOLOGY_CONTENT.items()})
+    with HTTPServer((host, port), TheologyHandler) as httpd:
+        print(f"Serving on http://{host}:{port}")
+        httpd.serve_forever()
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    run_server()

@@ -113,17 +113,7 @@
       <a class="api-link" href="/api/sections">JSON API로 보기</a>
     </header>
     <main>
-      {% for key, section in sections.items() %}
-      <article class="card" id="{{ key }}">
-        <h2>{{ section.title }}</h2>
-        <p class="summary">{{ section.summary }}</p>
-        <ul>
-          {% for bullet in section.bullet_points %}
-          <li>{{ bullet }}</li>
-          {% endfor %}
-        </ul>
-      </article>
-      {% endfor %}
+      %%SECTIONS%%
     </main>
     <footer>자료는 대한예수교장로회 통합측의 신학적 전통과 공적 문헌을 토대로 구성되었습니다.</footer>
   </body>
