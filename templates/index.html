@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>대한예수교장로회 통합측 조직신학 안내</title>
+    <style>
+      body {
+        font-family: "Noto Sans KR", sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f6f7fb;
+        color: #1f2933;
+      }
+
+      header {
+        background: linear-gradient(135deg, #184d47, #2d6a4f);
+        color: #fff;
+        padding: 2.5rem 1rem;
+        text-align: center;
+      }
+
+      main {
+        max-width: 900px;
+        margin: -2rem auto 4rem;
+        padding: 0 1rem;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 20px 40px rgba(24, 77, 71, 0.1);
+        margin-bottom: 2rem;
+        padding: 2rem;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 50px rgba(24, 77, 71, 0.14);
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      p.lead {
+        font-size: 1.1rem;
+        margin: 0 auto;
+        max-width: 720px;
+        line-height: 1.8;
+      }
+
+      h2 {
+        color: #184d47;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+      }
+
+      p.summary {
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+      }
+
+      ul {
+        padding-left: 1.2rem;
+        margin: 0;
+        line-height: 1.7;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 0.9rem;
+        color: #52606d;
+      }
+
+      .api-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: #2d6a4f;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .api-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 600px) {
+        header {
+          padding: 2rem 1rem;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        .card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>대한예수교장로회 통합측 조직신학 안내</h1>
+      <p class="lead">
+        통합측 조직신학의 핵심 주제와 특징을 다섯 개 영역으로 정리하여 소개하는 학습용
+        애플리케이션입니다.
+      </p>
+      <a class="api-link" href="/api/sections">JSON API로 보기</a>
+    </header>
+    <main>
+      %%SECTIONS%%
+    </main>
+    <footer>자료는 대한예수교장로회 통합측의 신학적 전통과 공적 문헌을 토대로 구성되었습니다.</footer>
+  </body>
+</html>
